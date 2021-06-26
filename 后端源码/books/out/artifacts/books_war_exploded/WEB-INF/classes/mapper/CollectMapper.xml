@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.isme.dao.CollectDao">
+    <select id="selectCollectById" resultMap="selectCollectByIdResult">
+    SELECT b.book_id,b.book_title,b.book_picture FROM t_collect c LEFT JOIN t_books b on b.book_id = c.book_id
+    WHERE c.user_id = #{user_id}
+    </select>
+    <resultMap id="selectCollectByIdResult" type="SelectCollect">
+        <id property="book_id" column="book_id"></id>
+        <result property="book_title" column="book_title"></result>
+        <result property="book_picture" column="book_picture"></result>
+    </resultMap>
+    <insert id="insertCollect" parameterType="Collect">
+        insert into t_collect(
+        user_id,
+        book_id
+        )values (
+        #{user_id},
+        #{book_id}
+        )
+    </insert>
+    <select id="selectIs" parameterType="map" resultType="int">
+        select count(0) from t_collect where user_id=#{user_id} and book_id=#{book_id}
+    </select>
+    <delete id="deleteCollect" parameterType="map">
+        delete from t_collect
+        where user_id=#{user_id} and book_id=#{book_id}
+    </delete>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.isme.dao.LoginLogDao">
+    <insert id="insertLoginLog" parameterType="LoginLog">
+        insert into t_loginLog(
+        user_id,
+        user_account,
+        user_name,
+        login_date,
+        ip
+        )
+        values (
+        #{user_id},
+        #{user_account},
+        #{user_name},
+        #{login_date},
+        #{ip}
+        )
+    </insert>
+    <select id="selectPageLoginLog" resultType="loginLog" parameterType="map">
+        select * from t_loginLog
+        <if test="name!=null">
+        where user_name like concat('%',#{name},'%')
+        </if>
+        order by login_date desc
+    </select>
+</mapper>

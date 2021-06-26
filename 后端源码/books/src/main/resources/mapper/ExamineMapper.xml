@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.isme.dao.ExamineDao">
+
+    <select id="selectPageExamine" resultType="Examine" parameterType="map">
+        select * from t_examine where is_delete=0
+        <if test="purchase_book!=null">
+            and purchase_book like concat('%',#{purchase_book},'%')
+        </if>
+        order by create_time desc
+    </select>
+
+
+    <insert id="insertExamine" parameterType="map">
+        insert into t_examine(
+        purchase_book,
+        examine_state,
+        create_time,
+        is_delete,
+        version,
+        create_user_id,
+        create_user_name
+        )
+        values (
+        #{purchase_book},
+        #{examine_state},
+        #{create_time},
+        #{is_delete},
+        #{version},
+        #{create_user_id},
+        #{create_user_name}
+        )
+    </insert>
+
+
+    <update id="deleteExamine" parameterType="map">
+        update t_examine set is_delete = 1 where examine_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateExamine" parameterType="map" >
+        update t_examine
+        <set>
+            <if test="purchase_book!=null">
+                purchase_book=#{purchase_book},
+            </if>
+            <if test="examine_state!=null">
+                examine_state=#{examine_state},
+            </if>
+            <if test="version!=null">
+                version=#{version}+1,
+            </if>
+            update_time=#{update_time},
+            update_user_id=#{update_user_id},
+            update_user_name=#{update_user_name}
+        </set>
+        where examine_id = #{examine_id} and version = #{version}
+    </update>
+
+    <select id="selectExamineById" parameterType="map" resultType="Examine">
+        select * from t_examine where examine_id=#{id}
+    </select>
+
+</mapper>
